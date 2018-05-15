@@ -100,11 +100,11 @@ func LogDir() string {
 }
 
 func ConfFile() string {
-	return filepath.Join(CWD(), "conf.ini")
+	return filepath.Join(CWD(), strings.ToLower(EXEName())+".ini")
 }
 
 func ConfFileDev() string {
-	return filepath.Join(CWD(), "conf.dev.ini")
+	return filepath.Join(CWD(), strings.ToLower(EXEName())+".dev.ini")
 }
 
 var conf *ini.File
