@@ -93,6 +93,12 @@
 			"revisionTime": "2018-03-11T21:45:15Z"
 		},
 		{
+			"checksumSHA1": "kLHYIzYvvehYJIC5a8+4a74+a1E=",
+			"path": "github.com/teris-io/shortid",
+			"revision": "771a37caa5cf0c81f585d7b6df4dfc77e0615b5c",
+			"revisionTime": "2017-10-29T13:18:06Z"
+		},
+		{
 			"checksumSHA1": "UZIcY3MiCGDy25pIy0QYOHU+Eo8=",
 			"path": "github.com/ugorji/go/codec",
 			"revision": "02537d3a3e32ef636a53519265d211bd208ca488",
@@ -117,5 +123,5 @@
 			"revisionTime": "2018-03-28T19:50:20Z"
 		}
 	],
-	"rootPath": "gitee.com/easydarwin/EasyGoLib"
+	"rootPath": "github.com/penggy/EasyGoLib"
 }

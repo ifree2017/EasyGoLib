@@ -15,6 +15,8 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/teris-io/shortid"
+
 	"github.com/go-ini/ini"
 
 	"github.com/gin-gonic/gin"
@@ -188,6 +190,12 @@ func Open(url string) error {
 	return exec.Command(cmd, args...).Start()
 }
 
+func ShortID() string {
+	return shortid.MustGenerate()
+}
+
 func init() {
+	gob.Register(map[string]interface{}{})
+	gob.Register(StringArray(""))
 	ini.PrettyFormat = false
 }

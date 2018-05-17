@@ -23,7 +23,9 @@ func GetLogWriter() io.Writer {
 	if rl != nil {
 		return rl
 	}
-	logFile := filepath.Join(LogDir(), strings.ToLower(EXEName())+"-%Y%m%d.log")
+	logDir := LogDir()
+	log.Println("log files -->", logDir)
+	logFile := filepath.Join(logDir, strings.ToLower(EXEName())+"-%Y%m%d.log")
 	_rl, err := rotatelogs.New(logFile, rotatelogs.WithMaxAge(-1), rotatelogs.WithRotationCount(3))
 	if err == nil {
 		rl = _rl
