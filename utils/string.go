@@ -17,3 +17,11 @@ func (r StringArray) MarshalJSON() ([]byte, error) {
 	}
 	return json.Marshal(items)
 }
+
+func Ellipsis(text string, length int) string {
+	r := []rune(text)
+	if len(r) > length {
+		return string(r[0:length]) + "..."
+	}
+	return text
+}
