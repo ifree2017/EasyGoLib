@@ -11,15 +11,12 @@ import (
 	"os/exec"
 	"os/user"
 	"path/filepath"
-	"regexp"
 	"runtime"
 	"strings"
 
 	"github.com/teris-io/shortid"
 
 	"github.com/go-ini/ini"
-
-	"github.com/gin-gonic/gin"
 )
 
 func LocalIP() string {
@@ -32,13 +29,6 @@ func LocalIP() string {
 		}
 	}
 	return ip
-}
-
-func IsXHR(c *gin.Context) bool {
-	if strings.EqualFold(c.GetHeader("x-requested-with"), "XMLHttpRequest") {
-		return true
-	}
-	return regexp.MustCompile("\\/json$").MatchString(c.GetHeader("accept"))
 }
 
 func MD5(str string) string {
@@ -134,6 +124,15 @@ func ReloadConf() *ini.File {
 		conf = _conf
 	}
 	return conf
+}
+
+func SaveToConf(section string, kvmap map[string]string) {
+	ReloadConf()
+	sec := conf.Section(section)
+	for k, v := range kvmap {
+		sec.Key(k).SetValue(v)
+	}
+	conf.SaveTo(ConfFile())
 }
 
 func ExpandHomeDir(path string) string {
