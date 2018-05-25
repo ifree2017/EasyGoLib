@@ -14,6 +14,7 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/eiannone/keyboard"
 	"github.com/teris-io/shortid"
 
 	"github.com/go-ini/ini"
@@ -191,6 +192,17 @@ func Open(url string) error {
 
 func ShortID() string {
 	return shortid.MustGenerate()
+}
+
+func PauseExit() {
+	log.Println("Press any to exit")
+	keyboard.GetSingleKey()
+	os.Exit(0)
+}
+
+func PauseGo(msg ...interface{}) {
+	log.Println(msg...)
+	keyboard.GetSingleKey()
 }
 
 func init() {

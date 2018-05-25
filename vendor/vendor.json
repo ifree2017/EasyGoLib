@@ -3,6 +3,12 @@
 	"ignore": "test",
 	"package": [
 		{
+			"checksumSHA1": "Z2F5SuvrW7HDh2Sf32t1RwjeeY4=",
+			"path": "github.com/eiannone/keyboard",
+			"revision": "6d2a597fd0f1f80b2dfdab8e893792dbd9e2db45",
+			"revisionTime": "2017-09-19T22:58:33Z"
+		},
+		{
 			"checksumSHA1": "BhMowD2DIKSd9qq8Pzh7Y3mh2/w=",
 			"path": "github.com/gin-contrib/sse",
 			"revision": "22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae",
@@ -109,6 +115,10 @@
 			"path": "golang.org/x/sys/unix",
 			"revision": "753144271b444787650750f626cc62831f63bc9c",
 			"revisionTime": "2016-01-07T02:14:22Z"
+		},
+		{
+			"path": "golang.org/x/sys/windows",
+			"revision": ""
 		},
 		{
 			"checksumSHA1": "q190bL03wQok3wVwYmMub2XhOiU=",
