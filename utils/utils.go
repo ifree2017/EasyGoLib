@@ -127,13 +127,22 @@ func ReloadConf() *ini.File {
 	return conf
 }
 
-func SaveToConf(section string, kvmap map[string]string) {
-	ReloadConf()
-	sec := conf.Section(section)
+func SaveToConf(section string, kvmap map[string]string) error {
+	var _conf *ini.File
+	var err error
+	if _conf, err = ini.InsensitiveLoad(ConfFile()); err != nil {
+		log.Println("load empty conf")
+		if _conf, err = ini.LoadSources(ini.LoadOptions{Insensitive: true}, []byte("")); err != nil {
+			return err
+		}
+	}
+	sec := _conf.Section(section)
 	for k, v := range kvmap {
 		sec.Key(k).SetValue(v)
 	}
-	conf.SaveTo(ConfFile())
+	_conf.SaveTo(ConfFile())
+	conf = _conf
+	return nil
 }
 
 func ExpandHomeDir(path string) string {
