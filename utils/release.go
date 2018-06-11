@@ -14,8 +14,9 @@ import (
 
 var Debug = false
 
-func Log(msg ...interface{}) {
-}
+func Log(msg ...interface{}) {}
+
+func Logf(format string, msg ...interface{}) {}
 
 var rl *rotatelogs.RotateLogs
 

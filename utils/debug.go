@@ -14,6 +14,10 @@ func Log(msg ...interface{}) {
 	log.Println(msg...)
 }
 
+func Logf(format string, msg ...interface{}) {
+	log.Printf(format, msg...)
+}
+
 func GetLogWriter() io.Writer {
 	return os.Stdout
 }
