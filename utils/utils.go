@@ -158,13 +158,14 @@ func ExpandHomeDir(path string) string {
 	return filepath.Join(HomeDir(), path[1:])
 }
 
-func EnsureDir(dir string) {
-	if _, err := os.Stat(dir); os.IsNotExist(err) {
+func EnsureDir(dir string) (err error) {
+	if _, err = os.Stat(dir); os.IsNotExist(err) {
 		err = os.MkdirAll(dir, 0755)
 		if err != nil {
-			panic(err)
+			return
 		}
 	}
+	return
 }
 
 func Exisit(path string) bool {
