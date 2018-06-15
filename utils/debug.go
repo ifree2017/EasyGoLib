@@ -3,6 +3,7 @@
 package utils
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -11,11 +12,11 @@ import (
 var Debug = true
 
 func Log(msg ...interface{}) {
-	log.Println(msg...)
+	log.Output(2, fmt.Sprintln(msg...))
 }
 
 func Logf(format string, msg ...interface{}) {
-	log.Printf(format, msg...)
+	log.Output(2, fmt.Sprintf(format, msg...))
 }
 
 func GetLogWriter() io.Writer {
