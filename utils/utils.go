@@ -168,7 +168,7 @@ func EnsureDir(dir string) (err error) {
 	return
 }
 
-func Exisit(path string) bool {
+func Exist(path string) bool {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		return false
 	}
