@@ -62,6 +62,12 @@ func HomeDir() string {
 	return u.HomeDir
 }
 
+func LogDir() string {
+	dir := filepath.Join(CWD(), "logs")
+	EnsureDir(dir)
+	return dir
+}
+
 func DataDir() string {
 	dir := CWD()
 	_dir := Conf().Section("").Key("data_dir").Value()
@@ -70,29 +76,13 @@ func DataDir() string {
 	}
 	dir = ExpandHomeDir(dir)
 	EnsureDir(dir)
-	// if _dir == "" {
-	// 	conf := ReloadConf()
-	// 	conf.Section("").Key("data_dir").SetValue(dir)
-	// 	conf.SaveTo(ConfFile())
-	// }
-	return dir
-}
-
-func VODDir() string {
-	dir := filepath.Join(DataDir(), "vod")
-	dir = ExpandHomeDir(Conf().Section("").Key("vod_dir").MustString(dir))
-	EnsureDir(dir)
-	return dir
-}
-
-func LogDir() string {
-	dir := filepath.Join(DataDir(), "logs")
-	dir = ExpandHomeDir(Conf().Section("").Key("log_dir").MustString(dir))
-	EnsureDir(dir)
 	return dir
 }
 
 func ConfFile() string {
+	if Exist(ConfFileDev()) {
+		return ConfFileDev()
+	}
 	return filepath.Join(CWD(), strings.ToLower(EXEName())+".ini")
 }
 
@@ -107,7 +97,6 @@ func Conf() *ini.File {
 		return conf
 	}
 	if _conf, err := ini.InsensitiveLoad(ConfFile()); err != nil {
-		log.Println("load empty conf")
 		_conf, _ = ini.LoadSources(ini.LoadOptions{Insensitive: true}, []byte(""))
 		conf = _conf
 	} else {
@@ -118,7 +107,6 @@ func Conf() *ini.File {
 
 func ReloadConf() *ini.File {
 	if _conf, err := ini.InsensitiveLoad(ConfFile()); err != nil {
-		log.Println("load empty conf")
 		_conf, _ = ini.LoadSources(ini.LoadOptions{Insensitive: true}, []byte(""))
 		conf = _conf
 	} else {
@@ -131,7 +119,6 @@ func SaveToConf(section string, kvmap map[string]string) error {
 	var _conf *ini.File
 	var err error
 	if _conf, err = ini.InsensitiveLoad(ConfFile()); err != nil {
-		log.Println("load empty conf")
 		if _conf, err = ini.LoadSources(ini.LoadOptions{Insensitive: true}, []byte("")); err != nil {
 			return err
 		}
@@ -219,4 +206,5 @@ func init() {
 	gob.Register(map[string]interface{}{})
 	gob.Register(StringArray(""))
 	ini.PrettyFormat = false
+	RedirectStderr()
 }

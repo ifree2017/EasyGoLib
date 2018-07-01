@@ -1,7 +1,7 @@
 package utils
 
 /*
-const char* build_time(void)
+const char* utils_build_time(void)
 {
     static const char* psz_build_time = __DATE__ " " __TIME__;
     return psz_build_time;
@@ -25,6 +25,7 @@ const (
 )
 
 var StartTime = time.Now()
+var BuildTime = GetBuildTime()
 
 func (dt *DateTime) UnmarshalJSON(data []byte) (err error) {
 	now, err := time.ParseInLocation(DateTimeLayout, string(data), time.Local)
@@ -77,7 +78,7 @@ func UpTimeString() string {
 	return fmt.Sprintf("%d Days %d Hours %d Mins %d Secs", days, hours, minutes, seconds)
 }
 
-func BuildTime() time.Time {
-	t, _ := time.Parse(CBuildTimeLayout, C.GoString(C.build_time()))
+func GetBuildTime() time.Time {
+	t, _ := time.Parse(CBuildTimeLayout, C.GoString(C.utils_build_time()))
 	return t
 }

@@ -9,8 +9,6 @@ import (
 	"os"
 )
 
-var Debug = true
-
 func Log(msg ...interface{}) {
 	log.Output(2, fmt.Sprintln(msg...))
 }

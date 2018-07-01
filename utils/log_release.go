@@ -12,8 +12,6 @@ import (
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 )
 
-var Debug = false
-
 func Log(msg ...interface{}) {}
 
 func Logf(format string, msg ...interface{}) {}
