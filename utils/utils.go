@@ -14,7 +14,6 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
-	"time"
 
 	"github.com/eiannone/keyboard"
 	"github.com/teris-io/shortid"
@@ -71,8 +70,7 @@ func LogDir() string {
 }
 
 func ErrorLogFilename() string {
-	t := time.Now().Format("0102150405")
-	return filepath.Join(LogDir(), fmt.Sprintf("%s-error-%s.log", strings.ToLower(EXEName()), t))
+	return filepath.Join(LogDir(), fmt.Sprintf("%s-error.log", strings.ToLower(EXEName())))
 }
 
 func DataDir() string {
