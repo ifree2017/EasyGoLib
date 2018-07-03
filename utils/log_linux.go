@@ -10,7 +10,7 @@ import (
 // RedirectStderr to the file passed in
 func RedirectStderr() (err error) {
 	logFilename := filepath.Join(LogDir(), strings.ToLower(EXEName())+"-error.log")
-	logFile, err := os.OpenFile(logFilename, os.O_WRONLY|os.O_CREATE|os.O_SYNC|os.O_APPEND, 0644)
+	logFile, err := os.OpenFile(logFilename, os.O_WRONLY|os.O_CREATE|os.O_SYNC, 0644)
 	if err != nil {
 		return
 	}
