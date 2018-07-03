@@ -5,6 +5,7 @@ import (
 	"crypto/md5"
 	"encoding/gob"
 	"encoding/hex"
+	"fmt"
 	"log"
 	"net"
 	"os"
@@ -13,6 +14,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"time"
 
 	"github.com/eiannone/keyboard"
 	"github.com/teris-io/shortid"
@@ -66,6 +68,11 @@ func LogDir() string {
 	dir := filepath.Join(CWD(), "logs")
 	EnsureDir(dir)
 	return dir
+}
+
+func ErrorLogFilename() string {
+	t := time.Now().Format("0102150405")
+	return filepath.Join(LogDir(), fmt.Sprintf("%s-error-%s.log", strings.ToLower(EXEName()), t))
 }
 
 func DataDir() string {

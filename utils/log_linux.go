@@ -2,15 +2,12 @@ package utils
 
 import (
 	"os"
-	"path/filepath"
-	"strings"
 	"syscall"
 )
 
 // RedirectStderr to the file passed in
 func RedirectStderr() (err error) {
-	logFilename := filepath.Join(LogDir(), strings.ToLower(EXEName())+"-error.log")
-	logFile, err := os.OpenFile(logFilename, os.O_WRONLY|os.O_CREATE|os.O_SYNC|os.O_TRUNC, 0644)
+	logFile, err := os.OpenFile(ErrorLogFilename(), os.O_WRONLY|os.O_CREATE|os.O_SYNC|os.O_TRUNC, 0644)
 	if err != nil {
 		return
 	}
