@@ -95,6 +95,17 @@ func ConfFileDev() string {
 	return filepath.Join(CWD(), strings.ToLower(EXEName())+".dev.ini")
 }
 
+func DBFile() string {
+	if Exist(DBFileDev()) {
+		return DBFileDev()
+	}
+	return filepath.Join(CWD(), strings.ToLower(EXEName()+".db"))
+}
+
+func DBFileDev() string {
+	return filepath.Join(CWD(), strings.ToLower(EXEName())+".dev.db")
+}
+
 var conf *ini.File
 
 func Conf() *ini.File {
