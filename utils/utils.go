@@ -222,5 +222,4 @@ func init() {
 	gob.Register(map[string]interface{}{})
 	gob.Register(StringArray(""))
 	ini.PrettyFormat = false
-	RedirectStderr()
 }
