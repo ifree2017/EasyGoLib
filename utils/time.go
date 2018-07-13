@@ -80,6 +80,6 @@ func UpTimeString() string {
 }
 
 func GetBuildTime() time.Time {
-	t, _ := time.Parse(CBuildTimeLayout, C.GoString(C.utils_build_time()))
+	t, _ := time.ParseInLocation(CBuildTimeLayout, C.GoString(C.utils_build_time()), time.Local)
 	return t
 }
