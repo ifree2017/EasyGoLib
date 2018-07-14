@@ -40,6 +40,9 @@ func NewPageResult(rows []interface{}) *PageResult {
 }
 
 func (pr *PageResult) Sort(by, order string) {
+	if by == "" {
+		return
+	}
 	sort.Slice(pr.Rows, func(i, j int) (ret bool) {
 		va := reflect.ValueOf(pr.Rows[i])
 		vb := reflect.ValueOf(pr.Rows[j])
