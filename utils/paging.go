@@ -55,7 +55,7 @@ func (pr *PageResult) Sort(by, order string) *PageResult {
 	if te.Kind() == reflect.Struct {
 		for i := 0; i < te.NumField(); i++ {
 			if strings.EqualFold(te.Field(i).Name, by) {
-				log.Printf("%v field name[%s] find field[%s], case insensitive", te, by, te.Field(i).Name)
+				// log.Printf("%v field name[%s] find field[%s], case insensitive", te, by, te.Field(i).Name)
 				byIdx = i
 				break
 			}
