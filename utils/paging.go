@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"log"
 	"math"
 	"reflect"
 	"sort"
@@ -28,24 +29,45 @@ func NewPageForm() *PageForm {
 }
 
 type PageResult struct {
-	Total uint          `json:"total"`
-	Rows  []interface{} `json:"rows"`
+	Total uint        `json:"total"`
+	Rows  interface{} `json:"rows"`
 }
 
-func NewPageResult(rows []interface{}) *PageResult {
+func NewPageResult(rows interface{}) *PageResult {
 	return &PageResult{
-		Total: uint(len(rows)),
+		Total: uint(reflect.ValueOf(rows).Len()),
 		Rows:  rows,
 	}
 }
 
-func (pr *PageResult) Sort(by, order string) {
+func (pr *PageResult) Sort(by, order string) *PageResult {
 	if by == "" {
-		return
+		return pr
+	}
+	if reflect.TypeOf(pr.Rows).Kind() != reflect.Slice {
+		return pr
+	}
+	te := reflect.TypeOf(pr.Rows).Elem()
+	for te.Kind() == reflect.Array || te.Kind() == reflect.Chan || te.Kind() == reflect.Map || te.Kind() == reflect.Ptr || te.Kind() == reflect.Slice {
+		te = te.Elem()
+	}
+	byIdx := -1
+	if te.Kind() == reflect.Struct {
+		for i := 0; i < te.NumField(); i++ {
+			if strings.EqualFold(te.Field(i).Name, by) {
+				log.Printf("%v field name[%s] find field[%s], case insensitive", te, by, te.Field(i).Name)
+				byIdx = i
+				break
+			}
+		}
+		if byIdx == -1 {
+			log.Printf("%v field name[%s] not found, case insensitive", te, by)
+			return pr
+		}
 	}
 	sort.Slice(pr.Rows, func(i, j int) (ret bool) {
-		va := reflect.ValueOf(pr.Rows[i])
-		vb := reflect.ValueOf(pr.Rows[j])
+		va := reflect.ValueOf(pr.Rows).Index(i)
+		vb := reflect.ValueOf(pr.Rows).Index(j)
 		for va.Kind() == reflect.Interface || va.Kind() == reflect.Ptr {
 			va = va.Elem()
 		}
@@ -53,9 +75,17 @@ func (pr *PageResult) Sort(by, order string) {
 			vb = vb.Elem()
 		}
 		if va.Kind() == reflect.Struct && vb.Kind() == reflect.Struct {
-			ret = fmt.Sprintf("%v", va.FieldByName(by)) < fmt.Sprintf("%v", vb.FieldByName(by))
-		}
-		if va.Kind() == reflect.Map && vb.Kind() == reflect.Map {
+			switch va.Field(byIdx).Kind() {
+			case reflect.Float32, reflect.Float64:
+				ret = va.Field(byIdx).Float() < vb.Field(byIdx).Float()
+			case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+				ret = va.Field(byIdx).Int() < vb.Field(byIdx).Int()
+			case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+				ret = va.Field(byIdx).Uint() < vb.Field(byIdx).Uint()
+			default:
+				ret = fmt.Sprintf("%v", va.Field(byIdx)) < fmt.Sprintf("%v", va.Field(byIdx))
+			}
+		} else if va.Kind() == reflect.Map && vb.Kind() == reflect.Map {
 			ret = fmt.Sprintf("%v", va.MapIndex(reflect.ValueOf(by))) < fmt.Sprintf("%v", vb.MapIndex(reflect.ValueOf(by)))
 		}
 		if strings.HasPrefix(strings.ToLower(order), "desc") {
@@ -63,4 +93,5 @@ func (pr *PageResult) Sort(by, order string) {
 		}
 		return
 	})
+	return pr
 }
