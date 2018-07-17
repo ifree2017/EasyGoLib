@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"time"
 
 	"github.com/eiannone/keyboard"
 	"github.com/teris-io/shortid"
@@ -216,6 +217,14 @@ func PauseExit() {
 func PauseGo(msg ...interface{}) {
 	log.Println(msg...)
 	keyboard.GetSingleKey()
+}
+
+func IsPortInUse(port int) bool {
+	if conn, err := net.DialTimeout("tcp", net.JoinHostPort("", fmt.Sprintf("%d", port)), 3*time.Second); err == nil {
+		conn.Close()
+		return true
+	}
+	return false
 }
 
 func init() {
