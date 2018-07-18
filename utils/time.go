@@ -1,14 +1,5 @@
 package utils
 
-/*
-const char* utils_build_time(void)
-{
-    static const char* psz_build_time = __DATE__ " " __TIME__;
-    return psz_build_time;
-}
-*/
-import "C"
-
 import (
 	"database/sql/driver"
 	"fmt"
