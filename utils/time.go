@@ -18,15 +18,13 @@ import (
 type DateTime time.Time
 
 const (
-	DateLayout       = "2006-01-02"
-	DateTimeLayout   = "2006-01-02 15:04:05"
-	BuildTimeLayout  = "2006.0102.150405"
-	TimestampLayout  = "20060102150405"
-	CBuildTimeLayout = "Jan  _2 2006 15:04:05"
+	DateLayout      = "2006-01-02"
+	DateTimeLayout  = "2006-01-02 15:04:05"
+	BuildTimeLayout = "2006.0102.150405"
+	TimestampLayout = "20060102150405"
 )
 
 var StartTime = time.Now()
-var BuildTime = GetBuildTime()
 
 func (dt *DateTime) UnmarshalJSON(data []byte) (err error) {
 	now, err := time.ParseInLocation(DateTimeLayout, string(data), time.Local)
@@ -77,9 +75,4 @@ func UpTimeString() string {
 	d -= minutes * time.Minute
 	seconds := d / time.Second
 	return fmt.Sprintf("%d Days %d Hours %d Mins %d Secs", days, hours, minutes, seconds)
-}
-
-func GetBuildTime() time.Time {
-	t, _ := time.ParseInLocation(CBuildTimeLayout, C.GoString(C.utils_build_time()), time.Local)
-	return t
 }
