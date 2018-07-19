@@ -83,7 +83,7 @@ func (pr *PageResult) Sort(by, order string) *PageResult {
 			case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 				ret = va.Field(byIdx).Uint() < vb.Field(byIdx).Uint()
 			default:
-				ret = fmt.Sprintf("%v", va.Field(byIdx)) < fmt.Sprintf("%v", va.Field(byIdx))
+				ret = fmt.Sprintf("%v", va.Field(byIdx)) < fmt.Sprintf("%v", vb.Field(byIdx))
 			}
 		} else if va.Kind() == reflect.Map && vb.Kind() == reflect.Map {
 			ret = fmt.Sprintf("%v", va.MapIndex(reflect.ValueOf(by))) < fmt.Sprintf("%v", vb.MapIndex(reflect.ValueOf(by)))
