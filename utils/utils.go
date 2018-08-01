@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/eiannone/keyboard"
@@ -46,6 +47,24 @@ func CWD() string {
 		return ""
 	}
 	return filepath.Dir(path)
+}
+
+var workInDirLock sync.Mutex
+
+func WorkInDir(f func(), dir string) (err error) {
+	wd, err := os.Getwd()
+	if err != nil {
+		return
+	}
+	workInDirLock.Lock()
+	defer workInDirLock.Unlock()
+	err = os.Chdir(dir)
+	if err != nil {
+		return
+	}
+	defer os.Chdir(wd)
+	f()
+	return
 }
 
 func EXEName() string {
