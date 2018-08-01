@@ -51,20 +51,13 @@ func CWD() string {
 
 var workInDirLock sync.Mutex
 
-func WorkInDir(f func(), dir string) (err error) {
-	wd, err := os.Getwd()
-	if err != nil {
-		return
-	}
+func WorkInDir(f func(), dir string) {
+	wd, _ := os.Getwd()
 	workInDirLock.Lock()
 	defer workInDirLock.Unlock()
-	err = os.Chdir(dir)
-	if err != nil {
-		return
-	}
+	os.Chdir(dir)
 	defer os.Chdir(wd)
 	f()
-	return
 }
 
 func EXEName() string {
