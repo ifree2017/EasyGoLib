@@ -3,12 +3,38 @@ package redis
 import (
 	"fmt"
 	"log"
+	"os/exec"
+	"path/filepath"
+	"runtime"
+	"strconv"
+	"strings"
+	"time"
+
+	"github.com/fatih/structs"
+
+	"github.com/mitchellh/mapstructure"
 
 	"github.com/go-redis/redis"
 	"github.com/penggy/EasyGoLib/utils"
 )
 
 var Client *redis.Client
+var cmd *exec.Cmd
+
+func EXE() string {
+	bin := utils.Conf().Section("redis").Key("bin").MustString("redis/redis-server")
+	if !filepath.IsAbs(bin) {
+		bin = filepath.Join(utils.CWD(), bin)
+	}
+	bin = strings.TrimSuffix(bin, ".exe")
+	switch runtime.GOOS {
+	case "windows":
+		return fmt.Sprintf("%s.exe", bin)
+	case "linux":
+		return bin
+	}
+	return ""
+}
 
 func Init() (err error) {
 	sec := utils.Conf().Section("redis")
@@ -16,6 +42,25 @@ func Init() (err error) {
 	port := sec.Key("port").MustInt(6379)
 	auth := sec.Key("auth").MustString("")
 	db := sec.Key("db").MustInt(0)
+
+	if host == "localhost" && utils.Exist(EXE()) {
+		if utils.IsPortInUse(port) {
+			err = fmt.Errorf("Port[%d] In Use", port)
+			return
+		}
+		args := []string{"--port", strconv.Itoa(port)}
+		if auth != "" {
+			args = append(args, "--requirepass", auth)
+		}
+		cmd = exec.Command(EXE(), args...)
+		// cmd.Stdout = os.Stdout
+		// cmd.Stderr = os.Stderr
+		cmd.Dir = filepath.Dir(EXE())
+		err = cmd.Start()
+		if err != nil {
+			return
+		}
+	}
 
 	log.Printf("redis server --> redis://%s:%d/db%d", host, port, db)
 
@@ -31,6 +76,39 @@ func Init() (err error) {
 	return
 }
 
+func HGetStruct(key string, out interface{}) (err error) {
+	if Client == nil {
+		err = fmt.Errorf("redis client not prepared")
+		return
+	}
+	retMap, err := Client.HGetAll(key).Result()
+	if err != nil {
+		return
+	}
+	err = mapstructure.WeakDecode(retMap, out)
+	return
+}
+
+func HSetStruct(key string, in interface{}, d time.Duration) (err error) {
+	if Client == nil {
+		err = fmt.Errorf("redis client not prepared")
+		return
+	}
+	tx := Client.TxPipeline()
+	err = tx.HMSet(key, structs.Map(in)).Err()
+	if err != nil {
+		return
+	}
+	if d > 0 {
+		err = tx.Expire(key, d).Err()
+		if err != nil {
+			return
+		}
+	}
+	_, err = tx.Exec()
+	return
+}
+
 func Close() (err error) {
 	if Client != nil {
 		err = Client.Close()
@@ -38,6 +116,10 @@ func Close() (err error) {
 			return
 		}
 		Client = nil
+	}
+	if cmd != nil {
+		cmd.Process.Kill()
+		cmd = nil
 	}
 	return
 }
