@@ -50,6 +50,7 @@ func Init() (err error) {
 			pid, _ := strconv.Atoi(string(buf))
 			if p, err := os.FindProcess(pid); err == nil {
 				p.Kill()
+				time.Sleep(1 * time.Second)
 			}
 		}
 		if utils.IsPortInUse(port) {
