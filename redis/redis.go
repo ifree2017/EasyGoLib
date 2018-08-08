@@ -2,7 +2,9 @@ package redis
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
@@ -44,6 +46,12 @@ func Init() (err error) {
 	db := sec.Key("db").MustInt(0)
 
 	if host == "localhost" && utils.Exist(EXE()) {
+		if buf, _ := ioutil.ReadFile(filepath.Join(filepath.Dir(EXE()), "redis.pid")); len(buf) > 0 {
+			pid, _ := strconv.Atoi(string(buf))
+			if p, err := os.FindProcess(pid); err == nil {
+				p.Kill()
+			}
+		}
 		if utils.IsPortInUse(port) {
 			err = fmt.Errorf("Port[%d] In Use", port)
 			return
@@ -60,6 +68,8 @@ func Init() (err error) {
 		if err != nil {
 			return
 		}
+		pidPath := filepath.Join(filepath.Dir(EXE()), "redis.pid")
+		ioutil.WriteFile(pidPath, []byte(strconv.Itoa(cmd.Process.Pid)), os.ModeAppend)
 	}
 
 	log.Printf("redis server --> redis://%s:%d/db%d", host, port, db)
@@ -79,6 +89,14 @@ func Init() (err error) {
 func HGetStruct(key string, out interface{}) (err error) {
 	if Client == nil {
 		err = fmt.Errorf("redis client not prepared")
+		return
+	}
+	n, err := Client.Exists(key).Result()
+	if err != nil {
+		return
+	}
+	if n == 0 {
+		err = fmt.Errorf("key[%s] not found", key)
 		return
 	}
 	retMap, err := Client.HGetAll(key).Result()
@@ -119,6 +137,7 @@ func Close() (err error) {
 	}
 	if cmd != nil {
 		cmd.Process.Kill()
+		os.RemoveAll(filepath.Join(filepath.Dir(EXE()), "redis.pid"))
 		cmd = nil
 	}
 	return
