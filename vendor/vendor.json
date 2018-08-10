@@ -69,6 +69,24 @@
 			"revisionTime": "2018-05-24T07:10:05Z"
 		},
 		{
+			"checksumSHA1": "e6mnn97t3gIzsS8S9CmxecG5/68=",
+			"path": "github.com/jinzhu/gorm",
+			"revision": "82eb9f8a5bbb5e6b929d2f0ae5b934e6a253f94e",
+			"revisionTime": "2018-05-12T06:29:00Z"
+		},
+		{
+			"checksumSHA1": "YBNroGKEItNe0bENTEKbx71DyGQ=",
+			"path": "github.com/jinzhu/gorm/dialects/sqlite",
+			"revision": "82eb9f8a5bbb5e6b929d2f0ae5b934e6a253f94e",
+			"revisionTime": "2018-05-12T06:29:00Z"
+		},
+		{
+			"checksumSHA1": "mfb/EusMwfajCPq0lwLWM/pvqI4=",
+			"path": "github.com/jinzhu/inflection",
+			"revision": "04140366298a54a039076d798123ffa108fff46c",
+			"revisionTime": "2018-03-08T03:36:59Z"
+		},
+		{
 			"checksumSHA1": "nvA2lbgdlqUION3p1sk2yaL1zK4=",
 			"path": "github.com/lestrrat-go/file-rotatelogs",
 			"revision": "31912ebef06aac4686da7aea6c11cdf430285a0f",
@@ -85,6 +103,12 @@
 			"path": "github.com/lestrrat-go/strftime",
 			"revision": "9948d03c6207ada6a27c7b43405f8dee04a8439e",
 			"revisionTime": "2018-02-20T09:15:53Z"
+		},
+		{
+			"checksumSHA1": "b8p2+LinvOPZTw6RN1aLVxsRVJs=",
+			"path": "github.com/mattn/go-sqlite3",
+			"revision": "29ac65fc30238ebe0fb5870b9d405f20aaa1495b",
+			"revisionTime": "2018-05-24T08:53:35Z"
 		},
 		{
 			"checksumSHA1": "AEgKH3R5InK9alypqu+dvDvdxwc=",
