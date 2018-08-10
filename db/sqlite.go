@@ -16,7 +16,7 @@ type Model struct {
 	// DeletedAt *time.Time `sql:"index" structs:"-"`
 }
 
-var GORM *gorm.DB
+var SQLite *gorm.DB
 
 func Init() (err error) {
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTablename string) string {
@@ -24,21 +24,21 @@ func Init() (err error) {
 	}
 	dbFile := utils.DBFile()
 	log.Println("db file -->", utils.DBFile())
-	GORM, err = gorm.Open("sqlite3", fmt.Sprintf("%s?loc=Asia/Shanghai", dbFile))
+	SQLite, err = gorm.Open("sqlite3", fmt.Sprintf("%s?loc=Asia/Shanghai", dbFile))
 	if err != nil {
 		return
 	}
 	// Sqlite cannot handle concurrent writes, so we limit sqlite to one connection.
 	// see https://github.com/mattn/go-sqlite3/issues/274
-	GORM.DB().SetMaxOpenConns(1)
-	GORM.SetLogger(DefaultGormLogger)
-	GORM.LogMode(false)
+	SQLite.DB().SetMaxOpenConns(1)
+	SQLite.SetLogger(DefaultGormLogger)
+	SQLite.LogMode(false)
 	return
 }
 
 func Close() {
-	if GORM != nil {
-		GORM.Close()
-		GORM = nil
+	if SQLite != nil {
+		SQLite.Close()
+		SQLite = nil
 	}
 }
