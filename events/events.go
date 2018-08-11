@@ -52,7 +52,7 @@ func (ed *EventDispatcher) GetListeners(name string) (els []*EventListener) {
 	return
 }
 
-func (ed *EventDispatcher) Trigger(name string, msg ...interface{}) {
+func (ed *EventDispatcher) Dispatch(name string, msg ...interface{}) {
 	els := ed.GetListeners(name)
 	for _, el := range els {
 		if !el.HandleFunc(msg) {
