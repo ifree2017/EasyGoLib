@@ -55,7 +55,7 @@ func (ed *EventDispatcher) GetListeners(name string) (els []*EventListener) {
 func (ed *EventDispatcher) Dispatch(name string, msg ...interface{}) {
 	els := ed.GetListeners(name)
 	for _, el := range els {
-		if !el.HandleFunc(msg) {
+		if !el.HandleFunc(msg...) {
 			break
 		}
 	}
