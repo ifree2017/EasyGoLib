@@ -7,7 +7,7 @@ type EventListener struct {
 	HandleFunc func(...interface{}) bool
 }
 
-func NewEventListener(name string, f func(...interface{}) bool) (el *EventListener) {
+func NewListener(name string, f func(...interface{}) bool) (el *EventListener) {
 	el = &EventListener{
 		Name:       name,
 		HandleFunc: f,
@@ -20,7 +20,7 @@ type EventDispatcher struct {
 	listenersLock *sync.RWMutex
 }
 
-func NewEventDispatcher() (ed *EventDispatcher) {
+func NewDispatcher() (ed *EventDispatcher) {
 	ed = &EventDispatcher{
 		listeners:     make(map[*EventListener]bool),
 		listenersLock: &sync.RWMutex{},
