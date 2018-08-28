@@ -85,9 +85,15 @@ func Init() (err error) {
 		Password: auth,
 		DB:       db,
 	})
-	if _, e := Client.Ping().Result(); e != nil {
-		err = fmt.Errorf("redis connect failed, %v", e)
+	return
+}
+
+func TestConnect() (ret bool) {
+	if Client == nil {
 		return
+	}
+	if _, err := Client.Ping().Result(); err == nil {
+		ret = true
 	}
 	return
 }
