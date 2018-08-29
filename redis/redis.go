@@ -125,6 +125,28 @@ func HSetStruct(key string, in interface{}, d time.Duration) (err error) {
 		return
 	}
 	tx := Client.TxPipeline()
+	for k, v := range structs.Map(in) {
+		err = tx.HSet(key, k, v).Err()
+		if err != nil {
+			return
+		}
+	}
+	if d > 0 {
+		err = tx.Expire(key, d).Err()
+		if err != nil {
+			return
+		}
+	}
+	_, err = tx.Exec()
+	return
+}
+
+func HMSetStruct(key string, in interface{}, d time.Duration) (err error) {
+	if Client == nil {
+		err = fmt.Errorf("redis client not prepared")
+		return
+	}
+	tx := Client.TxPipeline()
 	err = tx.HMSet(key, structs.Map(in)).Err()
 	if err != nil {
 		return
