@@ -68,8 +68,6 @@ func Init() (err error) {
 			args = append(args, "--requirepass", auth)
 		}
 		cmd = exec.Command(EXE(), args...)
-		// cmd.Stdout = os.Stdout
-		// cmd.Stderr = os.Stderr
 		cmd.Dir = filepath.Dir(EXE())
 		cmd.SysProcAttr = &syscall.SysProcAttr{
 			HideWindow:    true,
