@@ -10,6 +10,7 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/fatih/structs"
@@ -74,12 +75,15 @@ func Init() (err error) {
 		if err != nil {
 			return
 		}
+		cmd.SysProcAttr = &syscall.SysProcAttr{
+			HideWindow:    true,
+			CreationFlags: syscall.CREATE_NEW_PROCESS_GROUP,
+		}
 		pidPath := filepath.Join(filepath.Dir(EXE()), "redis.pid")
 		ioutil.WriteFile(pidPath, []byte(strconv.Itoa(cmd.Process.Pid)), os.ModeAppend)
 	}
 
 	log.Printf("redis server --> redis://%s:%d/db%d", host, port, db)
-
 	Client = redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%d", host, port),
 		Password: auth,
@@ -162,6 +166,7 @@ func HMSetStruct(key string, in interface{}, d time.Duration) (err error) {
 }
 
 func Close() (err error) {
+	log.Printf("redis close")
 	if Client != nil {
 		err = Client.Close()
 		if err != nil {
