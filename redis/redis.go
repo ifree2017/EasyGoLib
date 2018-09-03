@@ -71,13 +71,13 @@ func Init() (err error) {
 		// cmd.Stdout = os.Stdout
 		// cmd.Stderr = os.Stderr
 		cmd.Dir = filepath.Dir(EXE())
-		err = cmd.Start()
-		if err != nil {
-			return
-		}
 		cmd.SysProcAttr = &syscall.SysProcAttr{
 			HideWindow:    true,
 			CreationFlags: syscall.CREATE_NEW_PROCESS_GROUP,
+		}
+		err = cmd.Start()
+		if err != nil {
+			return
 		}
 		pidPath := filepath.Join(filepath.Dir(EXE()), "redis.pid")
 		ioutil.WriteFile(pidPath, []byte(strconv.Itoa(cmd.Process.Pid)), os.ModeAppend)
