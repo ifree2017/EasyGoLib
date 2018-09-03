@@ -78,7 +78,7 @@ func Init() (err error) {
 			return
 		}
 		pidPath := filepath.Join(filepath.Dir(EXE()), "redis.pid")
-		ioutil.WriteFile(pidPath, []byte(strconv.Itoa(cmd.Process.Pid)), os.ModeAppend)
+		ioutil.WriteFile(pidPath, []byte(strconv.Itoa(cmd.Process.Pid)), 0644)
 	}
 
 	log.Printf("redis server --> redis://%s:%d/db%d", host, port, db)
