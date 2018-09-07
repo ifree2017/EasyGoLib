@@ -10,7 +10,6 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
-	"syscall"
 	"time"
 
 	"github.com/fatih/structs"
@@ -69,12 +68,6 @@ func Init() (err error) {
 		}
 		cmd = exec.Command(EXE(), args...)
 		cmd.Dir = filepath.Dir(EXE())
-		if runtime.GOOS == "windows" {
-			cmd.SysProcAttr = &syscall.SysProcAttr{
-				HideWindow:    true,
-				CreationFlags: syscall.CREATE_NEW_PROCESS_GROUP,
-			}
-		}
 		err = cmd.Start()
 		if err != nil {
 			return
