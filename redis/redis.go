@@ -69,9 +69,11 @@ func Init() (err error) {
 		}
 		cmd = exec.Command(EXE(), args...)
 		cmd.Dir = filepath.Dir(EXE())
-		cmd.SysProcAttr = &syscall.SysProcAttr{
-			HideWindow:    true,
-			CreationFlags: syscall.CREATE_NEW_PROCESS_GROUP,
+		if runtime.GOOS == "windows" {
+			cmd.SysProcAttr = &syscall.SysProcAttr{
+				HideWindow:    true,
+				CreationFlags: syscall.CREATE_NEW_PROCESS_GROUP,
+			}
 		}
 		err = cmd.Start()
 		if err != nil {
