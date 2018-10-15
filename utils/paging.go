@@ -10,8 +10,8 @@ import (
 )
 
 type PageForm struct {
-	Start uint   `form:"start"`
-	Limit uint   `form:"limit"`
+	Start int    `form:"start"`
+	Limit int    `form:"limit"`
 	Q     string `form:"q"`
 	Sort  string `form:"sort"`
 	Order string `form:"order"`
@@ -29,15 +29,31 @@ func NewPageForm() *PageForm {
 }
 
 type PageResult struct {
-	Total uint        `json:"total"`
-	Rows  interface{} `json:"rows"`
+	Total int           `json:"total"`
+	Rows  []interface{} `json:"rows"`
 }
 
-func NewPageResult(rows interface{}) *PageResult {
+func NewPageResult(rows []interface{}) *PageResult {
 	return &PageResult{
-		Total: uint(reflect.ValueOf(rows).Len()),
+		Total: reflect.ValueOf(rows).Len(),
 		Rows:  rows,
 	}
+}
+
+func (pr *PageResult) Slice(start, limit int) *PageResult {
+	if pr.Rows == nil {
+		return pr
+	}
+	_start := start
+	if _start > pr.Total {
+		_start = pr.Total
+	}
+	_end := start + limit
+	if _end > pr.Total {
+		_end = pr.Total
+	}
+	pr.Rows = pr.Rows[_start:_end]
+	return pr
 }
 
 func (pr *PageResult) Sort(by, order string) *PageResult {
