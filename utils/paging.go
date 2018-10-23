@@ -29,32 +29,34 @@ func NewPageForm() *PageForm {
 }
 
 type PageResult struct {
-	Total int           `json:"total"`
-	Rows  []interface{} `json:"rows"`
+	Total int         `json:"total"`
+	Rows  interface{} `json:"rows"`
 }
 
 func NewPageResult(rows interface{}) *PageResult {
-	_rows := make([]interface{}, 0)
-	size := 0
 	v := reflect.ValueOf(rows)
 	if v.Kind() == reflect.Slice {
-		size = v.Len()
-		_rows = make([]interface{}, size)
-		for i := 0; i < size; i++ {
-			_rows[i] = v.Index(i).Interface()
+		return &PageResult{
+			Total: v.Len(),
+			Rows:  rows,
 		}
 	} else {
-		size = 1
-		_rows = append(_rows, rows)
-	}
-	return &PageResult{
-		Total: size,
-		Rows:  _rows,
+		return &PageResult{
+			Total: 1,
+			Rows:  []interface{}{rows},
+		}
 	}
 }
 
 func (pr *PageResult) Slice(start, limit int) *PageResult {
+	if limit < 0 || start < 0 {
+		return pr
+	}
 	if pr.Rows == nil {
+		return pr
+	}
+	v := reflect.ValueOf(pr.Rows)
+	if v.Kind() != reflect.Slice {
 		return pr
 	}
 	_start := start
@@ -65,7 +67,12 @@ func (pr *PageResult) Slice(start, limit int) *PageResult {
 	if _end > pr.Total {
 		_end = pr.Total
 	}
-	pr.Rows = pr.Rows[_start:_end]
+	size := _end - _start
+	_rows := make([]interface{}, size)
+	for i := 0; i < size; i++ {
+		_rows[i] = v.Index(_start + i).Interface()
+	}
+	pr.Rows = _rows
 	return pr
 }
 
