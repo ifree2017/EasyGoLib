@@ -24,7 +24,7 @@ func (p PageForm) String() string {
 func NewPageForm() *PageForm {
 	return &PageForm{
 		Start: 0,
-		Limit: math.MaxUint32,
+		Limit: math.MaxInt32,
 	}
 }
 
