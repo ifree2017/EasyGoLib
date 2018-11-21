@@ -40,6 +40,14 @@ func (ed *EventDispatcher) RemoveListener(el *EventListener) {
 	delete(ed.listeners, el)
 }
 
+func (ed *EventDispatcher) ClearListeners() {
+	ed.listenersLock.Lock()
+	defer ed.listenersLock.Unlock()
+	for el, _ := range ed.listeners {
+		delete(ed.listeners, el)
+	}
+}
+
 func (ed *EventDispatcher) GetListeners(name string) (els []*EventListener) {
 	els = make([]*EventListener, 0)
 	ed.listenersLock.RLock()
